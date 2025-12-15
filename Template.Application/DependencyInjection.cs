@@ -1,0 +1,24 @@
+using FluentValidation;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using Template.Application.Interfaces;
+using Template.Application.Services;
+
+namespace Template.Application
+{
+    public static class DependencyInjection
+    {
+        public static IServiceCollection AddApplication(this IServiceCollection services)
+        {
+            services.AddScoped<IOrderService, OrderService>();
+
+            services.AddMediatR(cfg =>
+                cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
+
+            services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+
+            return services;
+        }
+    }
+}

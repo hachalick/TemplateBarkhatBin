@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-Template.Worker-14811d4c-2d04-4382-8921-1d6c05b50a11</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.33.2" />
+    <PackageReference Include="MassTransit" Version="8.5.7" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.7" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.1" />
+    <PackageReference Include="Polly" Version="8.6.5" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Template.Application\Template.Application.csproj" />
+    <ProjectReference Include="..\Template.Infrastructure.Logging\Template.Infrastructure.Logging.csproj" />
+    <ProjectReference Include="..\Template.Infrastructure.Messaging.Rabbit\Template.Infrastructure.Messaging.Rabbit.csproj" />
+    <ProjectReference Include="..\Template.Infrastructure.Persistence\Template.Infrastructure.Persistence.csproj" />
+    <ProjectReference Include="..\Template.SignalR\Template.SignalR.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="HostedServices\" />
+  </ItemGroup>
+</Project>
