@@ -17,11 +17,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Template.Contracts\Template.Contracts.csproj" />
     <ProjectReference Include="..\Template.Domain\Template.Domain.csproj" />
-    <ProjectReference Include="..\Template.Infrastructure.Persistence\Template.Infrastructure.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="DTOs\" />
+    <Folder Include="Contracts\" />
+    <Folder Include="CommandHandler\" />
     <Folder Include="Validators\" />
   </ItemGroup>
 

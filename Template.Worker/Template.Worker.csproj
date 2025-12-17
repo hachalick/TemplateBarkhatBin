@@ -23,8 +23,4 @@
     <ProjectReference Include="..\Template.Infrastructure.Persistence\Template.Infrastructure.Persistence.csproj" />
     <ProjectReference Include="..\Template.SignalR\Template.SignalR.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="HostedServices\" />
-  </ItemGroup>
 </Project>

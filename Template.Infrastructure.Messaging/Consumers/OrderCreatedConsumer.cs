@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Template.Contracts.Events;
+using Template.Contracts.Orders.Events;
 
 namespace Template.Infrastructure.Messaging.Consumers
 {

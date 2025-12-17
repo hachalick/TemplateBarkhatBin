@@ -2,9 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Template.Infrastructure.Persistence.Models.Entities;
+using Template.Application.Orders.DTOs;
 
 namespace Template.Application.Orders.Queries.GetOrders
 {
-    public record GetOrdersQuery : IRequest<List<Order>>;
+    public sealed record GetOrdersQuery
+        : IRequest<List<OrderDto>>;
 }

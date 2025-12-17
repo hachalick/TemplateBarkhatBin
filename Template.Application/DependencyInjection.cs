@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Template.Application.Common.Behaviors;
 using Template.Application.Interfaces;
-using Template.Application.Services;
 
 namespace Template.Application
 {
@@ -12,8 +11,6 @@ namespace Template.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddScoped<IOrderService, OrderService>();
-
             services.AddMediatR(cfg =>
                 cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 

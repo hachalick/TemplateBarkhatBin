@@ -1,7 +1,7 @@
 # start
 
 ```bash
-Scaffold-DbContext "Server=.;Database=MyDb;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Infrastructure/Persistence/Models -ContextDir Infrastructure/Persistence -Context MyDbContext -Force
+cd ~/Template
 ```
 
 ```bash

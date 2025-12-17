@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using MassTransit;
-using Template.Contracts.Events;
 
-namespace Template.Contracts.Events
+namespace Template.Contracts.Orders.Events
 {
     public class OrderCreatedIntegrationEventConsumer : IConsumer<OrderCreatedIntegrationEvent>
     {

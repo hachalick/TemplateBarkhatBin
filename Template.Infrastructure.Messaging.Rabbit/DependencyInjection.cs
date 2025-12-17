@@ -1,9 +1,6 @@
 ﻿using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Template.Infrastructure.Messaging.Rabbit.Consumer;
 
 namespace Template.Infrastructure.Messaging.Rabbit

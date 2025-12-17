@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Template.Infrastructure.Persistence.Models.Entities;
+using Template.Infrastructure.Persistence.OutboxMessages;
+using Template.Application.Interfaces;
 
 namespace Template.Infrastructure.Persistence
 {
@@ -14,6 +16,8 @@ namespace Template.Infrastructure.Persistence
         {
             services.AddDbContext<TemplateBarkhatBinContext>(options =>
                 options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<IOutboxService, OutboxService>();
 
             return services;
         }

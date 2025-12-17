@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Template.Infrastructure.Persistence.Models.Entities;
-using Template.Infrastructure.Persistence.Repository;
+using Template.Application.Interfaces;
+using Template.Application.Orders.DTOs;
 
 namespace Template.Application.Orders.Queries.GetOrders
 {
-    public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, List<Order>>
+    public sealed class GetOrdersQueryHandler
+        : IRequestHandler<GetOrdersQuery, List<OrderDto>>
     {
         private readonly IOrderRepository _repository;
 
@@ -16,11 +17,15 @@ namespace Template.Application.Orders.Queries.GetOrders
             _repository = repository;
         }
 
-        public Task<List<Order>> Handle(
+        public async Task<List<OrderDto>> Handle(
             GetOrdersQuery request,
             CancellationToken cancellationToken)
         {
-            return _repository.GetAllAsync();
+            var orders = await _repository.GetAllAsync();
+
+            return orders.Select(o =>
+                new OrderDto(o.Id, o.CustomerName, o.TotalPrice)
+            ).ToList();
         }
     }
 }

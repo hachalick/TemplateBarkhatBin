@@ -19,7 +19,9 @@ namespace Template.Infrastructure.Persistence.Repository
         public OrderRepository(TemplateBarkhatBinContext context) => _context = context;
 
         public async Task<List<Order>> GetAllAsync() => await _context.Orders.ToListAsync();
+
         public async Task<Order?> GetByIdAsync(int id) => await _context.Orders.FindAsync(id);
+
         public async Task AddAsync(Order order) { _context.Orders.Add(order); await _context.SaveChangesAsync(); }
     }
 }

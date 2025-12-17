@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Template.Contracts.Events
+namespace Template.Contracts.Orders.Events
 {
     public record OrderCreatedIntegrationEvent(Guid OrderId, decimal Total, DateTime CreatedAt);
 }
