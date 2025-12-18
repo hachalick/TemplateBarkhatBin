@@ -4,9 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Template.Infrastructure.Persistence.Models.Entities;
-using Template.Infrastructure.Persistence.OutboxMessages;
 using Template.Application.Interfaces;
+using Template.Infrastructure.Persistence.Context.Template;
+using Template.Infrastructure.Persistence.Interceptors;
+using Template.Infrastructure.Persistence.OutboxMessages;
 
 namespace Template.Infrastructure.Persistence
 {
@@ -14,10 +15,14 @@ namespace Template.Infrastructure.Persistence
     {
         public static IServiceCollection AddInfrastructurePersistence(this IServiceCollection services, IConfiguration config)
         {
-            services.AddDbContext<TemplateBarkhatBinContext>(options =>
-                options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+            services.AddScoped<OutboxSaveChangesInterceptor>();
 
-            services.AddScoped<IOutboxService, OutboxService>();
+            services.AddDbContext<ApplicationDbContextSqlServerTemplate>((sp, options) =>
+            {
+                options.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+                options.AddInterceptors(
+                    sp.GetRequiredService<OutboxSaveChangesInterceptor>());
+            });
 
             return services;
         }

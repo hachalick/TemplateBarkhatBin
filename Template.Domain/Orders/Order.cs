@@ -1,21 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Template.Domain.Common;
+using Template.Domain.Orders.Events;
 
 namespace Template.Domain.Orders
 {
-    public class Order
+    public class Order: AggregateRoot
     {
         public int Id { get; private set; }
         public string CustomerName { get; private set; }
-        public decimal TotalPrice { get; private set; }
 
         private Order() { }
 
-        public Order(string customerName, decimal totalPrice)
+        private Order(int id, string customerName)
         {
+            Id = id;
             CustomerName = customerName;
-            TotalPrice = totalPrice;
+        }
+
+        public static Order Load(
+            int id,
+            string customerName)
+            => new Order(id, customerName);
+
+        public static Order Create(
+        string customerName)
+        {
+            var order = new Order
+            {
+                CustomerName = customerName
+            };
+
+            order.AddDomainEvent(
+                new OrderCreatedDomainEvent(order.Id, customerName));
+
+            return order;
         }
     }
 }

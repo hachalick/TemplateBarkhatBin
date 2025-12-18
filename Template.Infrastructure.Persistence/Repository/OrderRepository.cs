@@ -2,26 +2,49 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Template.Infrastructure.Persistence.Models.Entities;
+using Template.Application.Interfaces;
+using Template.Infrastructure.Persistence.Context.Template;
 
 namespace Template.Infrastructure.Persistence.Repository
 {
-    public interface IOrderRepository
+    public sealed class OrderRepository : IOrderRepository
     {
-        Task<List<Order>> GetAllAsync();
-        Task<Order?> GetByIdAsync(int id);
-        Task AddAsync(Order order);
-    }
+        private readonly ApplicationDbContextSqlServerTemplate _context;
 
-    public class OrderRepository : IOrderRepository
-    {
-        private readonly TemplateBarkhatBinContext _context;
-        public OrderRepository(TemplateBarkhatBinContext context) => _context = context;
+        public OrderRepository(ApplicationDbContextSqlServerTemplate context) => _context = context;
 
-        public async Task<List<Order>> GetAllAsync() => await _context.Orders.ToListAsync();
+        public async Task<List<Domain.Orders.Order>> GetAllAsync()
+        {
+            return await _context.Orders
+                .Select(x => Domain.Orders.Order.Load(
+                    x.Id,
+                    x.Name))
+                .ToListAsync();
+        }
 
-        public async Task<Order?> GetByIdAsync(int id) => await _context.Orders.FindAsync(id);
+        public async Task<Domain.Orders.Order?> GetByIdAsync(int id)
+        {
+            var entity = await _context.Orders.FindAsync(id);
 
-        public async Task AddAsync(Order order) { _context.Orders.Add(order); await _context.SaveChangesAsync(); }
+            if (entity is null)
+                return null;
+
+            return Domain.Orders.Order.Load(
+                entity.Id,
+                entity.Name);
+        }
+
+        public async Task AddAsync(Domain.Orders.Order order)
+        {
+            var entity = new Persistence.Models.Entities.Template.Order
+            {
+                Name = order.CustomerName
+            };
+
+            _context.Orders.Add(entity);
+        }
+
+        public Task SaveChangesAsync()
+            => _context.SaveChangesAsync();
     }
 }

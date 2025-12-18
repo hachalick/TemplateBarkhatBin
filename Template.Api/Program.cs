@@ -6,6 +6,7 @@ using Template.Application.Interfaces;
 using Template.Infrastructure.Messaging;
 using Template.Infrastructure.Messaging.Rabbit;
 using Template.Infrastructure.Persistence;
+using Template.Infrastructure.Persistence.Context.Template;
 using Template.Infrastructure.Persistence.Models.Entities;
 using Template.Infrastructure.Persistence.OutboxMessages;
 
@@ -17,7 +18,7 @@ builder.Services
     .AddInfrastructureRabbitMq(builder.Configuration)
     .AddSignalRModule();
 
-builder.Services.AddDbContext<TemplateBarkhatBinContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContextSqlServerTemplate>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddHostedService<OutboxProcessorWorker>();

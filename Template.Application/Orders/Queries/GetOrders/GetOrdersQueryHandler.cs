@@ -24,7 +24,7 @@ namespace Template.Application.Orders.Queries.GetOrders
             var orders = await _repository.GetAllAsync();
 
             return orders.Select(o =>
-                new OrderDto(o.Id, o.CustomerName, o.TotalPrice)
+                new OrderDto(o.Id, o.CustomerName)
             ).ToList();
         }
     }

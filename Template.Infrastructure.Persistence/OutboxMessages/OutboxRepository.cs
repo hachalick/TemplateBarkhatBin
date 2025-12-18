@@ -2,15 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Template.Infrastructure.Persistence.Models.Entities;
+using Template.Infrastructure.Persistence.Context.Template;
+using Template.Infrastructure.Persistence.Models.Entities.Template;
 
 namespace Template.Infrastructure.Persistence.OutboxMessages
 {
     public class OutboxRepository : IOutboxRepository
     {
-        private readonly TemplateBarkhatBinContext _context;
+        private readonly ApplicationDbContextSqlServerTemplate _context;
 
-        public OutboxRepository(TemplateBarkhatBinContext context)
+        public OutboxRepository(ApplicationDbContextSqlServerTemplate context)
         {
             _context = context;
         }

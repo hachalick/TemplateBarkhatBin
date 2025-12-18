@@ -6,7 +6,6 @@ namespace Template.Contracts.Orders.Events
 {
     public record OrderCreatedEvent(
         int Id,
-        string CustomerName,
-        decimal TotalPrice
+        string CustomerName
     );
 }

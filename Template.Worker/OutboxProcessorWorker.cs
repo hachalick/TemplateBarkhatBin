@@ -1,10 +1,7 @@
 ﻿using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
-using Template.Infrastructure.Persistence.Models.Entities;
+using Template.Infrastructure.Persistence.Context.Template;
 
 namespace Template.Worker
 {
@@ -30,7 +27,7 @@ namespace Template.Worker
             while (!stoppingToken.IsCancellationRequested)
             {
                 using var scope = _scopeFactory.CreateScope();
-                var db = scope.ServiceProvider.GetRequiredService<TemplateBarkhatBinContext>();
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContextSqlServerTemplate>();
 
                 var messages = await db.OutboxMessages
                     .Where(x => x.ProcessedOnUtc == null)

@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Template.Infrastructure.Persistence.Models.Entities.Template;
 
-namespace Template.Infrastructure.Persistence.Models.Entities;
+namespace Template.Infrastructure.Persistence.Context.Template;
 
-public partial class TemplateBarkhatBinContext : DbContext
+public partial class ApplicationDbContextSqlServerTemplate : DbContext
 {
-    public TemplateBarkhatBinContext()
+    public ApplicationDbContextSqlServerTemplate()
     {
     }
 
-    public TemplateBarkhatBinContext(DbContextOptions<TemplateBarkhatBinContext> options)
+    public ApplicationDbContextSqlServerTemplate(DbContextOptions<ApplicationDbContextSqlServerTemplate> options)
         : base(options)
     {
     }
@@ -18,10 +19,6 @@ public partial class TemplateBarkhatBinContext : DbContext
     public virtual DbSet<Order> Orders { get; set; }
 
     public virtual DbSet<OutboxMessage> OutboxMessages { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=.;Database=TemplateBarkhatBin;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
