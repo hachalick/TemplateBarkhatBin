@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using Template.Domain.Common;
+using Template.Infrastructure.Persistence.Models.Entities;
 using Template.Infrastructure.Persistence.Models.Entities.Template;
+using Template.Infrastructure.Persistence.OutboxMessages;
 
 namespace Template.Infrastructure.Persistence.Interceptors
 {
@@ -16,27 +18,26 @@ namespace Template.Infrastructure.Persistence.Interceptors
             CancellationToken cancellationToken = default)
         {
             var context = eventData.Context;
-            if (context == null)
+
+            if (context is null)
                 return base.SavingChangesAsync(eventData, result, cancellationToken);
 
-            var aggregates = context.ChangeTracker
-                .Entries<AggregateRoot>()
-                .Select(e => e.Entity)
-                .Where(e => e.DomainEvents.Any())
+            var domainEntities = context.ChangeTracker
+                .Entries<EntityBase>()
+                .Where(e => e.Entity.DomainEvents.Any())
                 .ToList();
 
-            foreach (var aggregate in aggregates)
-            {
-                foreach (var domainEvent in aggregate.DomainEvents)
-                {
-                    var outbox = OutboxMessage.From(domainEvent);
-                    context.Set<OutboxMessage>().Add(outbox);
-                }
+            var outboxMessages = domainEntities
+                .SelectMany(e => e.Entity.DomainEvents)
+                .Select(domainEvent => OutboxMessageFactory.Create(domainEvent))
+                .ToList();
 
-                aggregate.ClearDomainEvents();
-            }
+            context.Set<OutboxMessage>().AddRange(outboxMessages);
+
+            domainEntities.ForEach(e => e.Entity.ClearDomainEvents());
 
             return base.SavingChangesAsync(eventData, result, cancellationToken);
         }
     }
+
 }

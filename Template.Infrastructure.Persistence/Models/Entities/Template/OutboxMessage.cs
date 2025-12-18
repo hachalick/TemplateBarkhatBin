@@ -7,17 +7,6 @@ namespace Template.Infrastructure.Persistence.Models.Entities.Template;
 
 public partial class OutboxMessage
 {
-    public static OutboxMessage From(IDomainEvent domainEvent)
-    {
-        return new OutboxMessage
-        {
-            Id = Guid.NewGuid(),
-            Type = domainEvent.GetType().AssemblyQualifiedName!,
-            Content = JsonSerializer.Serialize(domainEvent),
-            OccurredOnUtc = DateTime.UtcNow
-        };
-    }
-
     public Guid Id { get; set; }
 
     public string Type { get; set; } = null!;
