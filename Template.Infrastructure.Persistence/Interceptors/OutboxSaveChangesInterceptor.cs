@@ -12,32 +12,39 @@ namespace Template.Infrastructure.Persistence.Interceptors
 {
     public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
     {
-        public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
-            DbContextEventData eventData,
-            InterceptionResult<int> result,
+        public override async ValueTask<int> SavedChangesAsync(
+            SaveChangesCompletedEventData eventData,
+            int result,
             CancellationToken cancellationToken = default)
         {
             var context = eventData.Context;
 
-            if (context is null)
-                return base.SavingChangesAsync(eventData, result, cancellationToken);
+            if (context == null) return result;
 
             var domainEntities = context.ChangeTracker
-                .Entries<EntityBase>()
+                .Entries<AggregateRoot>()
                 .Where(e => e.Entity.DomainEvents.Any())
                 .ToList();
 
-            var outboxMessages = domainEntities
-                .SelectMany(e => e.Entity.DomainEvents)
-                .Select(domainEvent => OutboxMessageFactory.Create(domainEvent))
-                .ToList();
+            foreach (var entityEntry in domainEntities)
+            {
+                foreach (var domainEvent in entityEntry.Entity.DomainEvents)
+                {
+                    var outboxMessage = new OutboxMessage
+                    {
+                        Id = Guid.NewGuid(),
+                        Type = domainEvent.GetType().AssemblyQualifiedName!,
+                        Content = JsonSerializer.Serialize(domainEvent),
+                        OccurredOnUtc = DateTime.UtcNow
+                    };
 
-            context.Set<OutboxMessage>().AddRange(outboxMessages);
+                    context.Set<OutboxMessage>().Add(outboxMessage);
+                }
 
-            domainEntities.ForEach(e => e.Entity.ClearDomainEvents());
+                entityEntry.Entity.ClearDomainEvents();
+            }
 
-            return base.SavingChangesAsync(eventData, result, cancellationToken);
+            return await base.SavedChangesAsync(eventData, result, cancellationToken);
         }
     }
-
 }

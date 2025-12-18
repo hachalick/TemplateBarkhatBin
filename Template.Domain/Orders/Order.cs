@@ -25,7 +25,7 @@ namespace Template.Domain.Orders
             => new Order(id, customerName);
 
         public static Order Create(
-        string customerName)
+            string customerName)
         {
             var order = new Order
             {

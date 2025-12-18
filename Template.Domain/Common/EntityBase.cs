@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Template.Domain.Common;
 
-namespace Template.Infrastructure.Persistence.Models.Entities
+namespace Template.Domain.Common
 {
     public abstract class EntityBase
     {
