@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -31,29 +32,25 @@ namespace Template.Infrastructure.Messaging
             {
                 using var scope = _scopeFactory.CreateScope();
 
-                var outboxRepo =
-                    scope.ServiceProvider.GetRequiredService<IOutboxRepository>();
+                var repo = scope.ServiceProvider.GetRequiredService<IOutboxRepository>();
+                var publisher = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
 
-                var publishEndpoint =
-                    scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
-
-                var messages = await outboxRepo.GetUnprocessedAsync(10);
+                var messages = await repo.GetUnprocessedAsync(20);
 
                 foreach (var message in messages)
                 {
                     try
                     {
                         var type = Type.GetType(message.Type)!;
-                        var payload =
-                            JsonSerializer.Deserialize(message.Content, type)!;
+                        var payload = JsonSerializer.Deserialize(message.Content, type)!;
 
-                        await publishEndpoint.Publish(payload, stoppingToken);
+                        await publisher.Publish(payload, stoppingToken);
 
-                        await outboxRepo.MarkAsProcessedAsync(message);
+                        await repo.MarkAsProcessedAsync(message.Id);
                     }
                     catch (Exception ex)
                     {
-                        message.Error = ex.Message;
+                        await repo.MarkAsFailedAsync(message.Id, ex.Message);
                         _logger.LogError(ex, "Outbox publish failed");
                     }
                 }

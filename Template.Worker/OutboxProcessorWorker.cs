@@ -4,6 +4,7 @@ using System.Text.Json;
 using Template.Application.Interfaces;
 using Template.Infrastructure.Persistence.Context.Template;
 using Template.Infrastructure.Persistence.Models.Entities.Template;
+using Template.Infrastructure.Persistence.OutboxMessages;
 
 namespace Template.Worker
 {
@@ -24,49 +25,32 @@ namespace Template.Worker
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                try
+                using var scope = _scopeFactory.CreateScope();
+
+                var repo = scope.ServiceProvider.GetRequiredService<IOutboxRepository>();
+                var publisher = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
+
+                var messages = await repo.GetUnprocessedAsync(20);
+
+                foreach (var message in messages)
                 {
-                    using var scope = _scopeFactory.CreateScope();
-                    var dbContext = scope.ServiceProvider
-                        .GetRequiredService<ApplicationDbContextSqlServerTemplate>();
-
-                    var publisher = scope.ServiceProvider
-                        .GetRequiredService<IEventPublisher>();
-
-                    var messages = await dbContext.Set<OutboxMessage>()
-                        .Where(m => m.ProcessedOnUtc == null)
-                        .OrderBy(m => m.OccurredOnUtc)
-                        .Take(20)
-                        .ToListAsync(stoppingToken);
-
-                    foreach (var message in messages)
+                    try
                     {
-                        try
-                        {
-                            var eventType = Type.GetType(message.Type);
-                            var domainEvent = JsonSerializer.Deserialize(
-                                message.Content, eventType!);
+                        var type = Type.GetType(message.Type)!;
+                        var payload = JsonSerializer.Deserialize(message.Content, type)!;
 
-                            await publisher.PublishAsync(domainEvent!, stoppingToken);
+                        await publisher.Publish(payload, stoppingToken);
 
-                            message.ProcessedOnUtc = DateTime.UtcNow;
-                        }
-                        catch (Exception ex)
-                        {
-                            message.Error = ex.Message;
-                            _logger.LogError(ex,
-                                "Outbox message failed: {MessageId}", message.Id);
-                        }
+                        await repo.MarkAsProcessedAsync(message.Id);
                     }
-
-                    await dbContext.SaveChangesAsync(stoppingToken);
+                    catch (Exception ex)
+                    {
+                        await repo.MarkAsFailedAsync(message.Id, ex.Message);
+                        _logger.LogError(ex, "Outbox publish failed");
+                    }
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogCritical(ex, "Outbox worker crashed");
-                }
 
-                await Task.Delay(2000, stoppingToken);
+                await Task.Delay(3000, stoppingToken);
             }
         }
     }

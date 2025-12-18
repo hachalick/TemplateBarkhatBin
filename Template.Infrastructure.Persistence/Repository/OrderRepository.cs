@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Template.Application.Interfaces;
 using Template.Infrastructure.Persistence.Context.Template;
+using Template.Infrastructure.Persistence.Models.Entities.Template;
 
 namespace Template.Infrastructure.Persistence.Repository
 {
@@ -46,5 +47,20 @@ namespace Template.Infrastructure.Persistence.Repository
 
         public Task SaveChangesAsync()
             => _context.SaveChangesAsync();
+
+        public async Task<List<OutboxMessage>> GetUnprocessedAsync(int take)
+        {
+            return await _context.OutboxMessages
+                .Where(x => x.ProcessedOnUtc == null)
+                .OrderBy(x => x.OccurredOnUtc)
+                .Take(take)
+                .ToListAsync();
+        }
+
+        public async Task MarkAsProcessedAsync(OutboxMessage message)
+        {
+            message.ProcessedOnUtc = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+        }
     }
 }
