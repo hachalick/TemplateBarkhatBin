@@ -1,26 +1,40 @@
 <Solution>
-  <Folder Name="/Docker/" />
-  <Folder Name="/Src/">
+  <Folder Name="/Backend/" />
+  <Folder Name="/Backend/Src/">
     <Project Path="Template.Api/Template.Api.csproj" />
     <Project Path="Template.Application/Template.Application.csproj" />
     <Project Path="Template.Contracts/Template.Contracts.csproj" />
     <Project Path="Template.Domain/Template.Domain.csproj" />
-    <Project Path="Template.Shared/Template.Shared.csproj" />
-    <Project Path="Template.SignalR/Template.SignalR.csproj" Id="a72f5313-c89c-4972-8864-6d1d43bb961f" />
-    <Project Path="Template.Worker/Template.Worker.csproj" />
-  </Folder>
-  <Folder Name="/Src/Infrastructure/">
     <Project Path="Template.Infrastructure.Catch/Template.Infrastructure.Catch.csproj" Id="e90576e9-e56f-469f-935c-e0d92a7749b1" />
+    <Project Path="Template.Infrastructure.FileProcessing/Template.Infrastructure.FileProcessing.csproj" Id="5c28ab16-711f-430d-9935-14496f531fbf" />
     <Project Path="Template.Infrastructure.Logging/Template.Infrastructure.Logging.csproj" />
     <Project Path="Template.Infrastructure.Messaging.Kafka/Template.Infrastructure.Messaging.Kafka.csproj" Id="6321fb6c-7fb1-4a81-a71f-77c81b0a7391" />
     <Project Path="Template.Infrastructure.Messaging.Rabbit/Template.Infrastructure.Messaging.Rabbit.csproj" Id="8985450f-24d4-4f8b-972c-137c2a584755" />
     <Project Path="Template.Infrastructure.Messaging/Template.Infrastructure.Messaging.csproj" />
     <Project Path="Template.Infrastructure.Persistence/Template.Infrastructure.Persistence.csproj" />
+    <Project Path="Template.Shared/Template.Shared.csproj" />
+    <Project Path="Template.SignalR/Template.SignalR.csproj" Id="a72f5313-c89c-4972-8864-6d1d43bb961f" />
+    <Project Path="Template.Worker/Template.Worker.csproj" />
   </Folder>
-  <Folder Name="/Src/Infrastructure/FileStorage/" />
-  <Folder Name="/Tests/">
+  <Folder Name="/Backend/Tests/">
     <Project Path="Template.Api.IntegrationTests/Template.Api.IntegrationTests.csproj" />
     <Project Path="Template.Application.Tests/Template.Application.Tests.csproj" />
     <Project Path="Template.Domain.Tests/Template.Domain.Tests.csproj" Id="fe1b41f4-7d65-4c1d-988d-b9c5f0895393" />
+  </Folder>
+  <Folder Name="/Dashboard/">
+    <Project Path="Template.Dashboard/Template.Dashboard.esproj">
+      <Build />
+      <Deploy />
+    </Project>
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="Compose.yml" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Website/">
+    <Project Path="Template.Website/template.website.esproj">
+      <Build />
+      <Deploy />
+    </Project>
   </Folder>
 </Solution>

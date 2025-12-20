@@ -1,0 +1,53 @@
+{
+  "name": "template.website",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@ducanh2912/next-pwa": "^10.2.9",
+    "@persian-tools/persian-tools": "^4.0.4",
+    "autoprefixer": "^10.4.23",
+    "dexie": "^4.2.1",
+    "dexie-react-hooks": "^4.2.0",
+    "jalali-ts": "^8.0.0",
+    "moment-jalaali": "^0.10.4",
+    "next": "^16.1.0",
+    "postcss": "^8.5.6",
+    "react": "^19.2.3",
+    "react-apexcharts": "^1.9.0",
+    "react-date-object": "^2.1.9",
+    "react-dom": "^19.2.3",
+    "react-icons": "^5.5.0",
+    "react-multi-date-picker": "^4.5.2",
+    "react-select": "^5.10.2",
+    "sharp": "^0.34.5",
+    "socket.io-client": "^4.8.1",
+    "sweetalert2": "^11.26.10",
+    "swiper": "^12.0.3"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "^9.39.1",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/moment-jalaali": "^0.7.9",
+    "@types/node": "^24.10.4",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "^16.1.0",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "tailwindcss": "^4.1.18",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.4",
+    "vite": "^7.2.4",
+    "webpack": "^5.104.1"
+  }
+}

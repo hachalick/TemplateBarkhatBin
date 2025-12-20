@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json;
-using Template.Domain.Common;
 
 namespace Template.Infrastructure.Persistence.Models.Entities.Template;
 

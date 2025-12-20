@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Contracts\" />
-    <Folder Include="CommandHandler\" />
     <Folder Include="Validators\" />
   </ItemGroup>
 
