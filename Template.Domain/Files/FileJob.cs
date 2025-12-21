@@ -14,26 +14,27 @@ namespace Template.Domain.Files
 
         private FileJob() { }
 
-        public static FileJob Create(string filePath)
+        public FileJob(Guid id, string filePath)
         {
-            var job = new FileJob
-            {
-                Id = Guid.NewGuid(),
-                FilePath = filePath,
-                Status = "Pending"
-            };
-
-            job.AddDomainEvent(
-                new FileUploadedDomainEvent(job.Id));
-
-            return job;
+            Id = id;
+            FilePath = filePath;
+            Status = "Pending";
         }
 
         public void MarkCompleted()
-            => Status = "Completed";
+        {
+            Status = "Completed";
+            AddDomainEvent(new FileProcessedDomainEvent(Id, Status, DateTime.UtcNow));
+        }
 
         public void MarkFailed()
-            => Status = "Failed";
+        {
+            Status = "Failed";
+            AddDomainEvent(new FileProcessedDomainEvent(Id, Status, DateTime.UtcNow));
+        }
+
+        public void MarkProcessing()
+            => Status = "Processing";
 
         public static FileJob Load(
             Guid id,

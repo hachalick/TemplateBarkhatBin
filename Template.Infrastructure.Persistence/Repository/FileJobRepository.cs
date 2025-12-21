@@ -19,33 +19,25 @@ namespace Template.Infrastructure.Persistence.Repository
             _context = context;
         }
 
-        public async Task AddAsync(DomainJob job)
+        public async Task AddAsync(FileJob job)
         {
-            var entity = FileJobMapper.ToEntity(job);
-            await _context.FileJobs.AddAsync(entity);
+            await _context.FileJobs.AddAsync(job.ToEntity());
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<DomainJob>> GetPendingAsync(int take)
+        public async Task<List<FileJob>> GetPendingAsync(int take)
         {
-            var entities = await _context.FileJobs
+            return await _context.FileJobs
                 .Where(x => x.Status == "Pending")
                 .Take(take)
+                .Select(x => x.ToDomain())
                 .ToListAsync();
-
-            return entities
-                .Select(FileJobMapper.ToDomain)
-                .ToList();
         }
 
-        public async Task SaveAsync(DomainJob job)
+        public async Task SaveAsync(FileJob job)
         {
-            var entity = await _context.FileJobs
-                .FirstAsync(x => x.Id == job.Id);
-
+            var entity = await _context.FileJobs.FindAsync(job.Id);
             entity.Status = job.Status;
-            entity.FilePath = job.FilePath;
-
             await _context.SaveChangesAsync();
         }
     }

@@ -21,10 +21,8 @@ namespace Template.Application.Files.Commands.UploadFile
             UploadFileCommand request,
             CancellationToken ct)
         {
-            var job = FileJob.Create(request.FilePath);
-
+            var job = new FileJob(Guid.NewGuid(), request.FilePath);
             await _repository.AddAsync(job);
-
             return job.Id;
         }
     }

@@ -3,7 +3,8 @@ using Template.Worker;
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddHostedService<Worker>();
-builder.Services.AddHostedService<OutboxProcessorWorker>();
+builder.Services.AddHostedService<FileProcessorWorker>();
+builder.Services.AddHostedService<OutboxDispatcherWorker>();
 
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 

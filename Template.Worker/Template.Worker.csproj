@@ -24,7 +24,6 @@
     <ProjectReference Include="..\Template.Infrastructure.Logging\Template.Infrastructure.Logging.csproj" />
     <ProjectReference Include="..\Template.Infrastructure.Messaging.Kafka\Template.Infrastructure.Messaging.Kafka.csproj" />
     <ProjectReference Include="..\Template.Infrastructure.Messaging.Rabbit\Template.Infrastructure.Messaging.Rabbit.csproj" />
-    <ProjectReference Include="..\Template.Infrastructure.Messaging\Template.Infrastructure.Messaging.csproj" />
     <ProjectReference Include="..\Template.Infrastructure.Persistence\Template.Infrastructure.Persistence.csproj" />
     <ProjectReference Include="..\Template.SignalR\Template.SignalR.csproj" />
   </ItemGroup>

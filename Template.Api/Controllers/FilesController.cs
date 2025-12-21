@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Template.Application.Files.Commands;
+using Template.Application.Interfaces;
+using Template.Domain.Files;
 
 namespace Template.Api.Controllers
 {
@@ -19,15 +21,18 @@ namespace Template.Api.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> Upload(IFormFile file)
         {
-            var path = Path.Combine("uploads", Guid.NewGuid() + file.FileName);
+            var id = Guid.NewGuid();
+            var path = Path.Combine("uploads", $"{id}_{file.FileName}");
 
-            using var stream = System.IO.File.Create(path);
+            Directory.CreateDirectory("uploads");
+
+            using var stream = new FileStream(path, FileMode.Create);
             await file.CopyToAsync(stream);
 
             var jobId = await _mediator.Send(
                 new UploadFileCommand(path));
 
-            return Ok(new { jobId });
+            return Accepted(new { jobId });
         }
     }
 }

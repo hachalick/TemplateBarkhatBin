@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OfficeOpenXml;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Template.Application.Interfaces;
@@ -9,41 +10,33 @@ namespace Template.Worker
 {
     public class FileProcessorWorker : BackgroundService
     {
-        private readonly IServiceScopeFactory _scopeFactory;
-        private readonly ILogger<FileProcessorWorker> _logger;
-
-        public FileProcessorWorker(
-            IServiceScopeFactory scopeFactory,
-            ILogger<FileProcessorWorker> logger)
-        {
-            _scopeFactory = scopeFactory;
-            _logger = logger;
-        }
+        private readonly IFileJobRepository _repository;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                using var scope = _scopeFactory.CreateScope();
+                var jobs = await _repository.GetPendingAsync(5);
 
-                var repo = scope.ServiceProvider
-                    .GetRequiredService<IFileJobRepository>();
-
-                var pendingJobs = await repo.GetPendingAsync(5);
-
-                foreach (var job in pendingJobs)
+                foreach (var job in jobs)
                 {
                     try
                     {
-                        ExcelProcessor.Process(job.FilePath);
+                        job.MarkProcessing();
+                        await _repository.SaveAsync(job);
+
+                        using var package = new ExcelPackage(new FileInfo(job.FilePath));
+                        var sheet = package.Workbook.Worksheets[0];
+
+                        // پردازش واقعی اینجا
 
                         job.MarkCompleted();
-                        await repo.SaveAsync(job);
+                        await _repository.SaveAsync(job);
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         job.MarkFailed();
-                        _logger.LogError(ex, "File processing failed");
+                        await _repository.SaveAsync(job);
                     }
                 }
 
