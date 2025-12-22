@@ -5,14 +5,20 @@ public override async Task<int> SaveChangesAsync(
 {
     var domainEvents = ChangeTracker
         .Entries<AggregateRoot>()
-        .SelectMany(e => e.Entity.PullDomainEvents())
+        .SelectMany(x => x.Entity.PullDomainEvents())
         .ToList();
 
-    var result = await base.SaveChangesAsync(cancellationToken);
+    foreach (var evt in domainEvents)
+    {
+        OutboxMessages.Add(new OutboxMessage
+        {
+            Id = Guid.NewGuid(),
+            Type = evt.GetType().Name,
+            Content = JsonSerializer.Serialize(evt),
+            OccurredOnUtc = DateTime.UtcNow
+        });
+    }
 
-    if (domainEvents.Any())
-        await _dispatcher.DispatchAsync(domainEvents);
-
-    return result;
+    return await base.SaveChangesAsync(cancellationToken);
 }
 ```

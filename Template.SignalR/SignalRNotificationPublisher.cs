@@ -21,17 +21,14 @@ namespace Template.SignalR
 
         public async Task PublishAsync(string type, string payload)
         {
-            if (type.Contains("FileProgressChangedDomainEvent"))
+            if (type == nameof(FileProgressChangedDomainEvent))
             {
-                var evt = JsonSerializer.Deserialize<FileProgressChangedDomainEvent>(payload)!;
+                var evt =
+                  JsonSerializer.Deserialize<FileProgressChangedDomainEvent>(payload)!;
 
                 await _hub.Clients
                     .Group(evt.JobId.ToString())
-                    .SendAsync("fileProgress", new
-                    {
-                        evt.JobId,
-                        evt.Progress
-                    });
+                    .SendAsync("fileProgress", evt.Progress);
             }
         }
     }

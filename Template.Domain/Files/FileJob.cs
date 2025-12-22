@@ -49,17 +49,13 @@ namespace Template.Domain.Files
             };
         }
 
-        public void ReportProgress(int progress)
+        public void ReportProgress(int percent)
         {
-            Status = "Processing";
-
-            AddDomainEvent(
-                new FileProgressChangedDomainEvent(
-                    Id,
-                    progress,
-                    DateTime.UtcNow
-                )
-            );
+            AddDomainEvent(new FileProgressChangedDomainEvent(
+                Id,
+                percent,
+                DateTime.UtcNow
+            ));
         }
     }
 }

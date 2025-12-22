@@ -34,13 +34,17 @@ namespace Template.Worker
 
                 var messages = await repo.GetUnprocessedAsync(10);
 
-                foreach (var message in messages)
+                foreach (var msg in messages)
                 {
-                    await publisher.PublishAsync(
-                        message.Type,
-                        message.Content);
-
-                    await repo.MarkAsProcessedAsync(message.Id);
+                    try
+                    {
+                        await publisher.PublishAsync(msg.Type, msg.Content);
+                        await repo.MarkAsProcessedAsync(msg.Id);
+                    }
+                    catch (Exception ex)
+                    {
+                        await repo.MarkAsFailedAsync(msg.Id, ex.Message);
+                    }
                 }
 
                 await Task.Delay(2000, stoppingToken);

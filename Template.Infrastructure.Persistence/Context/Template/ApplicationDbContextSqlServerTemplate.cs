@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using Template.Application.Interfaces;
 using Template.Domain.Common;
 using Template.Infrastructure.Persistence.Models.Entities.Template;
@@ -61,14 +62,20 @@ public partial class ApplicationDbContextSqlServerTemplate : DbContext
     {
         var domainEvents = ChangeTracker
             .Entries<AggregateRoot>()
-            .SelectMany(e => e.Entity.PullDomainEvents())
+            .SelectMany(x => x.Entity.PullDomainEvents())
             .ToList();
 
-        var result = await base.SaveChangesAsync(cancellationToken);
+        foreach (var evt in domainEvents)
+        {
+            OutboxMessages.Add(new OutboxMessage
+            {
+                Id = Guid.NewGuid(),
+                Type = evt.GetType().Name,
+                Content = JsonSerializer.Serialize(evt),
+                OccurredOnUtc = DateTime.UtcNow
+            });
+        }
 
-        if (domainEvents.Any())
-            await _dispatcher.DispatchAsync(domainEvents);
-
-        return result;
+        return await base.SaveChangesAsync(cancellationToken);
     }
 }

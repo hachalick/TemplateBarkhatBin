@@ -8,6 +8,7 @@ using Template.Application.Interfaces;
 using Template.Infrastructure.Persistence.Context.Template;
 using Template.Infrastructure.Persistence.Interceptors;
 using Template.Infrastructure.Persistence.OutboxMessages;
+using Template.Infrastructure.Persistence.Repository;
 
 namespace Template.Infrastructure.Persistence
 {
@@ -16,6 +17,8 @@ namespace Template.Infrastructure.Persistence
         public static IServiceCollection AddInfrastructurePersistence(this IServiceCollection services, IConfiguration config)
         {
             services.AddScoped<IDomainEventDispatcher, OutboxDomainEventDispatcher>();
+            services.AddScoped<IFileJobRepository, FileJobRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
 
             services.AddScoped<OutboxSaveChangesInterceptor>();
 

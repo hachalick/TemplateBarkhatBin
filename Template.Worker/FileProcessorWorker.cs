@@ -12,6 +12,11 @@ namespace Template.Worker
     {
         private readonly IFileJobRepository _repository;
 
+        public FileProcessorWorker(IFileJobRepository repository)
+        {
+            _repository = repository;
+        }
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
@@ -27,9 +32,6 @@ namespace Template.Worker
 
                         for (int i = 1; i <= 10; i++)
                         {
-                            // شبیه‌سازی پردازش
-                            await Task.Delay(500, stoppingToken);
-
                             job.ReportProgress(i * 10);
                             await _repository.SaveAsync(job);
                         }
@@ -43,9 +45,6 @@ namespace Template.Worker
                         await _repository.SaveAsync(job);
                     }
                 }
-
-
-                await Task.Delay(3000, stoppingToken);
             }
         }
     }
