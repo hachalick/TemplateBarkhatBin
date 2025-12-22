@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 using Template.Application.Interfaces;
+using Template.Domain.Files.Events;
 
 namespace Template.SignalR
 {
@@ -19,7 +21,18 @@ namespace Template.SignalR
 
         public async Task PublishAsync(string type, string payload)
         {
-            await _hub.Clients.All.SendAsync(type, payload);
+            if (type.Contains("FileProgressChangedDomainEvent"))
+            {
+                var evt = JsonSerializer.Deserialize<FileProgressChangedDomainEvent>(payload)!;
+
+                await _hub.Clients
+                    .Group(evt.JobId.ToString())
+                    .SendAsync("fileProgress", new
+                    {
+                        evt.JobId,
+                        evt.Progress
+                    });
+            }
         }
     }
 }

@@ -25,10 +25,14 @@ namespace Template.Worker
                         job.MarkProcessing();
                         await _repository.SaveAsync(job);
 
-                        using var package = new ExcelPackage(new FileInfo(job.FilePath));
-                        var sheet = package.Workbook.Worksheets[0];
+                        for (int i = 1; i <= 10; i++)
+                        {
+                            // شبیه‌سازی پردازش
+                            await Task.Delay(500, stoppingToken);
 
-                        // پردازش واقعی اینجا
+                            job.ReportProgress(i * 10);
+                            await _repository.SaveAsync(job);
+                        }
 
                         job.MarkCompleted();
                         await _repository.SaveAsync(job);
@@ -39,6 +43,7 @@ namespace Template.Worker
                         await _repository.SaveAsync(job);
                     }
                 }
+
 
                 await Task.Delay(3000, stoppingToken);
             }

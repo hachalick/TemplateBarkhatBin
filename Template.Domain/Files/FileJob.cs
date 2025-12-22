@@ -48,5 +48,18 @@ namespace Template.Domain.Files
                 Status = status
             };
         }
+
+        public void ReportProgress(int progress)
+        {
+            Status = "Processing";
+
+            AddDomainEvent(
+                new FileProgressChangedDomainEvent(
+                    Id,
+                    progress,
+                    DateTime.UtcNow
+                )
+            );
+        }
     }
 }

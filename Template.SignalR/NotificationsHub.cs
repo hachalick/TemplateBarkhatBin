@@ -10,5 +10,10 @@ namespace Template.SignalR
         public Task SendToUser(string userId, string message) => Clients.User(userId).SendAsync("ReceiveNotification", message);
 
         public Task Send(string message) => Clients.All.SendAsync("Receive", message);
+
+        public Task Subscribe(Guid jobId)
+            => Groups.AddToGroupAsync(
+                Context.ConnectionId,
+                jobId.ToString());
     }
 }

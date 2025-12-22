@@ -1,0 +1,52 @@
+﻿version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql_local
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Password123!"
+      MSSQL_PID: "Express"
+    ports:
+      - "15930:1433"
+    restart: unless-stopped
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+
+  website-template:
+    build:
+      context: ./template.website
+      dockerfile: Dockerfile
+    container_name: website-template
+    ports:
+      - "15332:8082"
+    volumes:
+      - ./template.website:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    restart: unless-stopped
+    depends_on:
+      - sqlserver
+
+  dashboard-template:
+    build:
+      context: ./Template.Dashboard
+      dockerfile: Dockerfile
+    container_name: dashboard-template
+    ports:
+      - "15333:8081"
+    volumes:
+      - ./Template.Dashboard:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    restart: unless-stopped
+    depends_on:
+      - sqlserver
+
+volumes:
+  sqlserver_data:
