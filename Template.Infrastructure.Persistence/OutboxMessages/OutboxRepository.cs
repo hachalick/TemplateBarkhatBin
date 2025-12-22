@@ -5,6 +5,7 @@ using System.Text;
 using Template.Application.DTOs;
 using Template.Application.Interfaces;
 using Template.Infrastructure.Persistence.Context.Template;
+using Template.Infrastructure.Persistence.Mappers;
 using Template.Infrastructure.Persistence.Models.Entities.Template;
 
 namespace Template.Infrastructure.Persistence.OutboxMessages
@@ -16,6 +17,11 @@ namespace Template.Infrastructure.Persistence.OutboxMessages
         public OutboxRepository(ApplicationDbContextSqlServerTemplate context)
         {
             _context = context;
+        }
+
+        public async Task AddAsync(OutboxMessageDto message)
+        {
+            await _context.OutboxMessages.AddAsync(message.ToEntity());
         }
 
         public async Task<IReadOnlyList<OutboxMessageDto>> GetUnprocessedAsync(int take)

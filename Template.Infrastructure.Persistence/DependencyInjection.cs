@@ -15,6 +15,8 @@ namespace Template.Infrastructure.Persistence
     {
         public static IServiceCollection AddInfrastructurePersistence(this IServiceCollection services, IConfiguration config)
         {
+            services.AddScoped<IDomainEventDispatcher, OutboxDomainEventDispatcher>();
+
             services.AddScoped<OutboxSaveChangesInterceptor>();
 
             services.AddDbContext<ApplicationDbContextSqlServerTemplate>((sp, options) =>

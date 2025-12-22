@@ -71,9 +71,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Context\" />
     <Folder Include="Configurations\" />
-    <Folder Include="Context\Template\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

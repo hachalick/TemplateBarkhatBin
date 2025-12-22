@@ -16,5 +16,12 @@ namespace Template.Domain.Common
 
         public void ClearDomainEvents()
             => _domainEvents.Clear();
+
+        public IEnumerable<IDomainEvent> PullDomainEvents()
+        {
+            var events = _domainEvents.ToList();
+            _domainEvents.Clear();
+            return events;
+        }
     }
 }

@@ -7,6 +7,8 @@ namespace Template.Application.Interfaces
 {
     public interface IOutboxRepository
     {
+        Task AddAsync(OutboxMessageDto message);
+
         Task<IReadOnlyList<OutboxMessageDto>> GetUnprocessedAsync(int take);
 
         Task MarkAsProcessedAsync(Guid id);

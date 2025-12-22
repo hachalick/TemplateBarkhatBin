@@ -24,13 +24,13 @@ namespace Template.Domain.Files
         public void MarkCompleted()
         {
             Status = "Completed";
-            AddDomainEvent(new FileProcessedDomainEvent(Id, Status, DateTime.UtcNow));
+            AddDomainEvent(new FileProcessedDomainEvent(Id, Status));
         }
 
         public void MarkFailed()
         {
             Status = "Failed";
-            AddDomainEvent(new FileProcessedDomainEvent(Id, Status, DateTime.UtcNow));
+            AddDomainEvent(new FileProcessedDomainEvent(Id, Status));
         }
 
         public void MarkProcessing()
