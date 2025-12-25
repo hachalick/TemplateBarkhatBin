@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using Template.Domain.Common;
 using Template.Domain.Files.Events;
@@ -11,6 +12,7 @@ namespace Template.Domain.Files
         public Guid Id { get; private set; }
         public string FilePath { get; private set; }
         public string Status { get; private set; }
+        public int Progress { get; private set; }
 
         private FileJob() { }
 
@@ -34,28 +36,34 @@ namespace Template.Domain.Files
         }
 
         public void MarkProcessing()
-            => Status = "Processing";
+        {
+            Status = "Processing";
+            AddDomainEvent(new FileProcessingStartedDomainEvent(Id));
+        }
 
         public static FileJob Load(
             Guid id,
             string filePath,
-            string status)
+            string status,
+            int progress)
         {
             return new FileJob
             {
                 Id = id,
                 FilePath = filePath,
-                Status = status
+                Status = status,
+                Progress = progress
             };
         }
 
-        public void ReportProgress(int percent)
+        public void ReportProgress(int progress)
         {
-            AddDomainEvent(new FileProgressChangedDomainEvent(
-                Id,
-                percent,
-                DateTime.UtcNow
-            ));
+            if (progress < 0 || progress > 100)
+                throw new InvalidOperationException("Progress must be between 0 and 100");
+
+            Progress = progress;
+
+            AddDomainEvent(new FileProgressChangedDomainEvent(Id, Progress));
         }
     }
 }

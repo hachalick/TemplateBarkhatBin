@@ -5,7 +5,7 @@ using Template.Application.DTOs;
 
 namespace Template.Application.Interfaces
 {
-    public interface IOutboxRepository
+    public interface IOutboxWriter
     {
         Task AddAsync(OutboxMessageDto message);
 

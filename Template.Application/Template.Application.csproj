@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Contracts\" />
+    <Folder Include="Services\" />
     <Folder Include="Validators\" />
   </ItemGroup>
 

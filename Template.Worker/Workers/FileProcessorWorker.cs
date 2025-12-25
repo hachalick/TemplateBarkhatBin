@@ -6,7 +6,7 @@ using Template.Application.Interfaces;
 using Template.Infrastructure.FileProcessing;
 using Template.Infrastructure.Persistence.Repository;
 
-namespace Template.Worker
+namespace Template.Worker.Workers
 {
     public class FileProcessorWorker : BackgroundService
     {
@@ -21,7 +21,7 @@ namespace Template.Worker
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var jobs = await _repository.GetPendingAsync(5);
+                var jobs = await _repository.GetPendingAsync(1);
 
                 foreach (var job in jobs)
                 {

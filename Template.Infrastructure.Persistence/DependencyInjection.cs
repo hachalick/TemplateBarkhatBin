@@ -16,7 +16,11 @@ namespace Template.Infrastructure.Persistence
     {
         public static IServiceCollection AddInfrastructurePersistence(this IServiceCollection services, IConfiguration config)
         {
+            services.AddScoped<IOutboxService, OutboxService>();
             services.AddScoped<IDomainEventDispatcher, OutboxDomainEventDispatcher>();
+
+            services.AddScoped<IOutboxWriter, OutboxRepository>();
+            services.AddScoped<IOutboxStore, OutboxRepository>();
             services.AddScoped<IFileJobRepository, FileJobRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
 

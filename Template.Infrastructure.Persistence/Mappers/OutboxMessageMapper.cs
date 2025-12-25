@@ -13,8 +13,11 @@ namespace Template.Infrastructure.Persistence.Mappers
             {
                 Id = dto.Id,
                 Type = dto.Type,
-                Content = dto.Content,
-                OccurredOnUtc = dto.OccurredOnUtc
+                Payload = dto.Payload,
+                OccurredOnUtc = dto.OccurredOnUtc,
+                OutboxStatus = dto.OutboxStatus,
+                ProcessedOnUtc = DateTime.UtcNow,
+                RetryCount = dto.RetryCount
             };
 
         public static OutboxMessageDto ToDto(this OutboxMessage entity)
@@ -22,8 +25,10 @@ namespace Template.Infrastructure.Persistence.Mappers
             {
                 Id = entity.Id,
                 Type = entity.Type,
-                Content = entity.Content,
-                OccurredOnUtc = entity.OccurredOnUtc
+                Payload = entity.Payload,
+                OccurredOnUtc = entity.OccurredOnUtc,
+                RetryCount = entity.RetryCount,
+                OutboxStatus = entity.OutboxStatus,
             };
     }
 }

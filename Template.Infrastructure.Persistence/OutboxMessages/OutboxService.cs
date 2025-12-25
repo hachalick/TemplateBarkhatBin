@@ -21,8 +21,11 @@ namespace Template.Infrastructure.Persistence.OutboxMessages
             {
                 Id = Guid.NewGuid(),
                 Type = dto.Type,
-                Content = dto.Content,
-                OccurredOnUtc = DateTime.UtcNow
+                Payload = dto.Payload,
+                OccurredOnUtc = DateTime.UtcNow,
+                RetryCount = 0,
+                ProcessedOnUtc = DateTime.UtcNow,
+                OutboxStatus = (byte)EOutboxStatus.Pending
             };
 
             _context.OutboxMessages.Add(entity);

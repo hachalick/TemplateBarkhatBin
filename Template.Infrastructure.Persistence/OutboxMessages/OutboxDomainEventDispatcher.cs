@@ -12,10 +12,10 @@ namespace Template.Infrastructure.Persistence.OutboxMessages
     public sealed class OutboxDomainEventDispatcher
         : IDomainEventDispatcher
     {
-        private readonly IOutboxRepository _repository;
+        private readonly IOutboxWriter _repository;
 
         public OutboxDomainEventDispatcher(
-            IOutboxRepository repository)
+            IOutboxWriter repository)
         {
             _repository = repository;
         }
@@ -28,8 +28,10 @@ namespace Template.Infrastructure.Persistence.OutboxMessages
                 {
                     Id = Guid.NewGuid(),
                     Type = domainEvent.GetType().Name,
-                    Content = JsonSerializer.Serialize(domainEvent),
-                    OccurredOnUtc = DateTime.UtcNow
+                    Payload = JsonSerializer.Serialize(domainEvent),
+                    OccurredOnUtc = DateTime.UtcNow,
+                    RetryCount = 0,
+                    OutboxStatus = (byte)EOutboxStatus.Pending,
                 };
 
                 await _repository.AddAsync(dto);

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
-using Template.Application.Interfaces;
 using Template.Domain.Common;
 using Template.Infrastructure.Persistence.Models.Entities.Template;
 
@@ -10,12 +9,13 @@ namespace Template.Infrastructure.Persistence.Context.Template;
 
 public partial class ApplicationDbContextSqlServerTemplate : DbContext
 {
-    private readonly IDomainEventDispatcher _dispatcher;
+    public ApplicationDbContextSqlServerTemplate()
+    {
+    }
 
-    public ApplicationDbContextSqlServerTemplate(DbContextOptions<ApplicationDbContextSqlServerTemplate> options, IDomainEventDispatcher dispatcher)
+    public ApplicationDbContextSqlServerTemplate(DbContextOptions<ApplicationDbContextSqlServerTemplate> options)
         : base(options)
     {
-        _dispatcher = dispatcher;
     }
 
     public virtual DbSet<FileJob> FileJobs { get; set; }
@@ -45,9 +45,9 @@ public partial class ApplicationDbContextSqlServerTemplate : DbContext
             entity.ToTable("OutboxMessage");
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())", "DF_OutboxMessage_Id");
-            entity.Property(e => e.Content).HasMaxLength(50);
             entity.Property(e => e.Error).HasMaxLength(50);
             entity.Property(e => e.OccurredOnUtc).HasColumnType("datetime");
+            entity.Property(e => e.Payload).HasMaxLength(50);
             entity.Property(e => e.ProcessedOnUtc).HasColumnType("datetime");
             entity.Property(e => e.Type).HasMaxLength(50);
         });
@@ -71,11 +71,16 @@ public partial class ApplicationDbContextSqlServerTemplate : DbContext
             {
                 Id = Guid.NewGuid(),
                 Type = evt.GetType().Name,
-                Content = JsonSerializer.Serialize(evt),
-                OccurredOnUtc = DateTime.UtcNow
+                Payload = JsonSerializer.Serialize(evt),
+                OccurredOnUtc = DateTime.UtcNow,
+                Error = "",
+                OutboxStatus = (byte)EOutboxStatus.Pending,
+                ProcessedOnUtc = DateTime.UtcNow,
+                RetryCount = 0,
             });
         }
 
         return await base.SaveChangesAsync(cancellationToken);
     }
+
 }

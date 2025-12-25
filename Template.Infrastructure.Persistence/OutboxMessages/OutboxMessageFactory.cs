@@ -15,8 +15,11 @@ namespace Template.Infrastructure.Persistence.OutboxMessages
             {
                 Id = Guid.NewGuid(),
                 Type = domainEvent.GetType().AssemblyQualifiedName!,
-                Content = JsonSerializer.Serialize(domainEvent),
-                OccurredOnUtc = DateTime.UtcNow
+                Payload = JsonSerializer.Serialize(domainEvent),
+                OccurredOnUtc = DateTime.UtcNow,
+                OutboxStatus = (byte)EOutboxStatus.Pending,
+                RetryCount = 0,
+                ProcessedOnUtc = DateTime.UtcNow,
             };
         }
     }

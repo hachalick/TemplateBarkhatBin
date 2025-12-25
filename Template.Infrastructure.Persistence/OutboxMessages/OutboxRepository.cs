@@ -10,7 +10,7 @@ using Template.Infrastructure.Persistence.Models.Entities.Template;
 
 namespace Template.Infrastructure.Persistence.OutboxMessages
 {
-    public class OutboxRepository : IOutboxRepository
+    public class OutboxRepository : IOutboxWriter, IOutboxStore
     {
         private readonly ApplicationDbContextSqlServerTemplate _context;
 
@@ -24,17 +24,32 @@ namespace Template.Infrastructure.Persistence.OutboxMessages
             await _context.OutboxMessages.AddAsync(message.ToEntity());
         }
 
+        async Task<List<OutboxMessage>> IOutboxStore.GetPendingAsync(int take, CancellationToken cancellationToken)
+        {
+            return await _context.OutboxMessages
+                .Where(x => x.ProcessedOnUtc == null && x.OutboxStatus == (byte)EOutboxStatus.Pending && (x.OccurredOnUtc <= DateTime.UtcNow || x.OutboxStatus == (byte)EOutboxStatus.Failed))
+                .OrderBy(x => x.OccurredOnUtc)
+                .Take(take)
+                .Select(x => new OutboxMessage
+                {
+                    Id = x.Id,
+                    Type = x.Type,
+                    Payload = x.Payload
+                })
+                .ToListAsync(cancellationToken);
+        }
+
         public async Task<IReadOnlyList<OutboxMessageDto>> GetUnprocessedAsync(int take)
         {
             return await _context.OutboxMessages
-                .Where(x => x.ProcessedOnUtc == null)
+                .Where(x => x.ProcessedOnUtc == null && x.OutboxStatus == (byte)EOutboxStatus.Pending && (x.OccurredOnUtc <= DateTime.UtcNow || x.OutboxStatus == (byte)EOutboxStatus.Failed))
                 .OrderBy(x => x.OccurredOnUtc)
                 .Take(take)
                 .Select(x => new OutboxMessageDto
                 {
                     Id = x.Id,
                     Type = x.Type,
-                    Content = x.Content
+                    Payload = x.Payload
                 })
                 .ToListAsync();
         }
@@ -55,6 +70,11 @@ namespace Template.Infrastructure.Persistence.OutboxMessages
 
             entity.ProcessedOnUtc = DateTime.UtcNow;
             await _context.SaveChangesAsync();
+        }
+
+        public Task SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            return _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

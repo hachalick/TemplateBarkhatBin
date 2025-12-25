@@ -10,4 +10,6 @@ public partial class FileJob
     public string Status { get; set; } = null!;
 
     public string FilePath { get; set; } = null!;
+
+    public int Progress { get; set; }
 }

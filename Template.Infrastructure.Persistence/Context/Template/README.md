@@ -14,8 +14,12 @@ public override async Task<int> SaveChangesAsync(
         {
             Id = Guid.NewGuid(),
             Type = evt.GetType().Name,
-            Content = JsonSerializer.Serialize(evt),
-            OccurredOnUtc = DateTime.UtcNow
+            Payload = JsonSerializer.Serialize(evt),
+            OccurredOnUtc = DateTime.UtcNow,
+            Error = "",
+            OutboxStatus = (byte)EOutboxStatus.Pending,
+            ProcessedOnUtc = DateTime.UtcNow,
+            RetryCount = 0,
         });
     }
 

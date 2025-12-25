@@ -20,6 +20,39 @@
       <Deploy />
     </Project>
   </Folder>
+  <Folder Name="/Service/" />
+  <Folder Name="/Service/3rdParty/" />
+  <Folder Name="/Service/Account/" />
+  <Folder Name="/Service/Accounting/" />
+  <Folder Name="/Service/Application/" />
+  <Folder Name="/Service/Auth/" />
+  <Folder Name="/Service/Blog/" />
+  <Folder Name="/Service/CDN/" />
+  <Folder Name="/Service/Chat/" />
+  <Folder Name="/Service/Comment/" />
+  <Folder Name="/Service/Delivery/" />
+  <Folder Name="/Service/Document/" />
+  <Folder Name="/Service/Email/" />
+  <Folder Name="/Service/File/" />
+  <Folder Name="/Service/Instagram/" />
+  <Folder Name="/Service/Order/" />
+  <Folder Name="/Service/Pay/" />
+  <Folder Name="/Service/Post/" />
+  <Folder Name="/Service/Reel/" />
+  <Folder Name="/Service/Request/" />
+  <Folder Name="/Service/Reserve/" />
+  <Folder Name="/Service/Salary/" />
+  <Folder Name="/Service/Scheduler/" />
+  <Folder Name="/Service/Share/" />
+  <Folder Name="/Service/Shipping/" />
+  <Folder Name="/Service/Sms/" />
+  <Folder Name="/Service/Story/" />
+  <Folder Name="/Service/Supervisor/" />
+  <Folder Name="/Service/Survey/" />
+  <Folder Name="/Service/Telegram/" />
+  <Folder Name="/Service/Test/" />
+  <Folder Name="/Service/Ticket/" />
+  <Folder Name="/Service/Warehouse/" />
   <Folder Name="/Solution Items/">
     <File Path="docker-compose.yaml" />
     <File Path="README.md" />

@@ -5,8 +5,9 @@ using Template.Domain.Common;
 
 namespace Template.Domain.Files.Events
 {
-    public record FileProgressChangedDomainEvent(Guid JobId, int Progress) : IDomainEvent
+    public record FileProcessingStartedDomainEvent(Guid JobId) : IDomainEvent
     {
+        public Guid Id { get; } = Guid.NewGuid();
         public DateTime OccurredOnUtc { get; init; } = DateTime.UtcNow;
     }
 }

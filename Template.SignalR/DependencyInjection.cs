@@ -8,8 +8,8 @@ namespace Template.SignalR
     {
         public static IServiceCollection AddSignalRModule(this IServiceCollection services, IConfiguration config)
         {
-            services.AddScoped<INotificationPublisher,
-                SignalRNotificationPublisher>();
+            services.AddScoped<INotificationPublisher, SignalRNotificationPublisher>();
+            services.AddScoped<IOutboxEventHandler, SignalROutboxEventHandler>();
             return services;
         }
     }

@@ -15,6 +15,6 @@ namespace Template.Infrastructure.Persistence.Mappers
             };
 
         public static Template.Domain.Files.FileJob ToDomain(this Template.Infrastructure.Persistence.Models.Entities.Template.FileJob entity)
-            => Template.Domain.Files.FileJob.Load(entity.Id, entity.FilePath, entity.Status);
+            => Template.Domain.Files.FileJob.Load(entity.Id, entity.FilePath, entity.Status, entity.Progress);
     }
 }

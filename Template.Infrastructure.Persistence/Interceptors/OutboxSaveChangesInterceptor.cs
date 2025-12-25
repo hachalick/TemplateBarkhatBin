@@ -34,7 +34,7 @@ namespace Template.Infrastructure.Persistence.Interceptors
                     {
                         Id = Guid.NewGuid(),
                         Type = domainEvent.GetType().AssemblyQualifiedName!,
-                        Content = JsonSerializer.Serialize(domainEvent),
+                        Payload = JsonSerializer.Serialize(domainEvent),
                         OccurredOnUtc = DateTime.UtcNow
                     };
 

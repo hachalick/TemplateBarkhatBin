@@ -19,6 +19,7 @@ namespace Template.Infrastructure.Messaging.Rabbit
                 {
                     cfg.Host(
                         configuration["RabbitMq:Host"] ?? "localhost",
+                        ushort.Parse(configuration["RabbitMq:Port"] ?? "5672"),
                         "/",
                         h =>
                         {
